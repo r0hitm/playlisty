@@ -1,4 +1,5 @@
 module.exports = {
+    root: true,
     env: {
         browser: true,
         es2021: true,
@@ -10,7 +11,6 @@ module.exports = {
         "plugin:react/recommended",
         "plugin:react/jsx-runtime",
         "plugin:react-hooks/recommended",
-        "plugin:plugin:react-refresh",
         "prettier",
     ],
     ignorePatterns: ["dist", ".eslintrc.cjs", "vite.config.ts"],
@@ -21,6 +21,7 @@ module.exports = {
         project: ["./tsconfig.json", "./tsconfig.node.json"],
         tsconfigRootDir: __dirname,
     },
+    plugins: ["react-refresh"],
     rules: {
         "react-refresh/only-export-components": [
             "warn",

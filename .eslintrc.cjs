@@ -28,5 +28,7 @@ module.exports = {
             { allowConstantExport: true },
         ],
         "react/react-in-jsx-scope": "off",
+        // Disable checking for IIFE async because need those in useEffect
+        "@typescript-eslint/no-floating-promises": ["error", {"ignoreIIFE": true}]
     },
 };

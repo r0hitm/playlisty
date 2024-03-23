@@ -1,4 +1,5 @@
 import { useSpotifySdk } from "../useSpotifySdk";
+import "./Header.css";
 
 export function Header({
     login,

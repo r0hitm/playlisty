@@ -1,5 +1,5 @@
 import "./App.css";
-import { useSpotifySdk } from "./useSpotifySdk";
+import { useSpotifySdk } from "../useSpotifySdk";
 
 function App() {
     const sdk = useSpotifySdk();

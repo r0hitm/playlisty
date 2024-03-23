@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { SpotifySdkProvider } from "./SdkContext";
-import App from "./App";
 import {
     AuthorizationCodeWithPKCEStrategy,
     SpotifyApi,
@@ -8,8 +7,9 @@ import {
 import { appScopes } from "./appScopes";
 import { opts } from "./config";
 import { Header } from "./components/Header";
+import { Outlet } from "react-router-dom";
 
-export function Root() {
+export default function Root() {
     const [sdk, setSdk] = useState<SpotifyApi | null>(null);
 
     // TODO: also run this function if we have /callback in the url
@@ -55,7 +55,7 @@ export function Root() {
                 }}
                 logout={logout}
             />
-            <App />
+            <Outlet />
         </SpotifySdkProvider>
     );
 }

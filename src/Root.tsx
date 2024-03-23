@@ -7,6 +7,7 @@ import {
 } from "@spotify/web-api-ts-sdk";
 import { appScopes } from "./appScopes";
 import { opts } from "./config";
+import { Header } from "./components/Header";
 
 export function Root() {
     const [sdk, setSdk] = useState<SpotifyApi | null>(null);
@@ -48,12 +49,13 @@ export function Root() {
 
     return (
         <SpotifySdkProvider value={sdk}>
-            <App
+            <Header
                 login={() => {
                     void login();
                 }}
                 logout={logout}
             />
+            <App />
         </SpotifySdkProvider>
     );
 }

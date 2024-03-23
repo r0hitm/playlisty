@@ -10,7 +10,7 @@ const router = createBrowserRouter(
             path: "/",
             element: <Root />, // jsx or component to be rendered on this path
             //   errorPage: // component  to render when error (see below)
-            //   children: [/* nested routes */], // to render use <Outlet /> in <App />
+            //   children: [/* nested routes */], // to render use <Outlet /> in <Root />
         },
         {
             path: "/contact/:id", // dynacmic url

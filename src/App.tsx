@@ -1,15 +1,8 @@
-import { useSpotify } from "./hooks/useSpotify";
-import {
-    Scopes /*SearchResults, SpotifyApi*/,
-} from "@spotify/web-api-ts-sdk";
 import "./App.css";
+import { useSpotifySdk } from "./useSpotifySdk";
 
-function App() {
-    const sdk = useSpotify(
-        import.meta.env.VITE_SPOTIFY_CLIENT_ID as string,
-        import.meta.env.VITE_REDIRECT_TARGET as string,
-        Scopes.userDetails
-    );
+function App({ login, logout }: { login: () => void; logout: () => void }) {
+    const sdk = useSpotifySdk();
 
     return (
         <>
@@ -26,7 +19,7 @@ function App() {
                 {sdk ? (
                     <button
                         onClick={() => {
-                            console.log("TODO: Log out");
+                            logout();
                         }}
                     >
                         Log out
@@ -34,13 +27,14 @@ function App() {
                 ) : (
                     <button
                         onClick={() => {
-                            console.log("TODO: Log in");
+                            login();
                         }}
                     >
-                        Log in
+                        Log in with Spotify
                     </button>
                 )}
             </header>
+            {sdk ? <p>Logged In</p> : <p>Not Logged In</p>}
         </>
     );
 }

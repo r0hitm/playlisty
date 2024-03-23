@@ -2,7 +2,7 @@
 
 /// 🔴^--- Remove the above line after implementing customRedirectionStrategy properly
 
-import { IRedirectionStrategy, SdkOptions } from "@spotify/web-api-ts-sdk";
+import { IRedirectionStrategy, SdkOptions, Scopes } from "@spotify/web-api-ts-sdk";
 // const defaultConfig: SdkConfiguration = {
 //     fetch: (req: RequestInfo | URL, init: RequestInit | undefined) => fetch(req, init),
 //     beforeRequest: (_: string, __: RequestInit) => { },
@@ -37,3 +37,12 @@ export const opts: SdkOptions = {
     },
     redirectionStrategy: new customRedirectionStrategy(),
 };
+
+
+export const appScopes = [
+    ...Scopes.userDetails,
+    ...Scopes.userLibraryRead,
+    ...Scopes.userLibraryModify,
+    ...Scopes.playlistRead,
+    ...Scopes.playlistModify,
+];

@@ -1,8 +1,8 @@
+import useSdk from "../hooks/useSdk";
 import "./App.css";
-import { useSpotifySdk } from "../useSpotifySdk";
 
 function App() {
-    const sdk = useSpotifySdk();
+    const sdk = useSdk();
 
     return <>{sdk ? <p>Logged In 👌</p> : <p>❌ Not logged in</p>}</>;
 }

@@ -1,15 +1,14 @@
-import { useSpotifySdk } from "../useSpotifySdk";
 import "./Header.css";
 
 export function Header({
+    logInStatus,
     login,
     logout,
 }: {
+    logInStatus: boolean
     login: () => void;
     logout: () => void;
 }) {
-    const sdk = useSpotifySdk();
-
     return (
         <header>
             <img src="/Logo.webp" alt="Logo" className="logo" />
@@ -21,7 +20,7 @@ export function Header({
                     <a href="#">Privacy Policy</a>
                 </li>
             </ul>
-            {sdk ? (
+            {logInStatus ? (
                 <button
                     onClick={() => {
                         logout();

@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import "./Header.css";
 
 export function Header({
@@ -5,21 +6,32 @@ export function Header({
     login,
     logout,
 }: {
-    logInStatus: boolean
+    logInStatus: boolean;
     login: () => void;
     logout: () => void;
 }) {
     return (
         <header>
             <img src="/Logo.webp" alt="Logo" className="logo" />
-            <ul>
-                <li>
-                    <a href="#">About</a>
-                </li>
-                <li>
-                    <a href="#">Privacy Policy</a>
-                </li>
-            </ul>
+            <nav>
+                <ul>
+                    <li>
+                        <NavLink to="/app" end replace>
+                            Home
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/about" end replace>
+                            About
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/privacy-policy" end replace>
+                            Privacy Policy
+                        </NavLink>
+                    </li>
+                </ul>
+            </nav>
             {logInStatus ? (
                 <button
                     onClick={() => {

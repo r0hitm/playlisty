@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { Header } from "./components/Header";
 import { useSpotify } from "./hooks/useSpotify";
 
@@ -23,6 +23,11 @@ export default function Root() {
                 logout={logOut}
             />
             <Outlet context={sdk} />
+            {sdk ? (
+                <Navigate to="/app" replace />
+            ) : (
+                <p>Get started with logging in with Spotify!</p>
+            )}
         </>
     );
 }

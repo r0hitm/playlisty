@@ -17,7 +17,7 @@ header {
     display: flex;
 }
 
-ul {
+nav ul {
     display: flex;
     list-style-type: none;
     padding: 0;
@@ -25,8 +25,15 @@ ul {
     align-items: center;
 }
 
-li {
+nav li {
     margin: 0 1em;
+}
+
+nav a.active {
+    /* wavy dotted underline that is bold on the current active link */
+    text-decoration-line: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: #1c6937;
 }
 
 header button {

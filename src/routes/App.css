@@ -1,0 +1,47 @@
+.app-layout {
+    display: grid;
+    grid-template-areas:
+        "dropdown inthese"
+        "tracks inthese"
+        "tracks notinthese"
+        "tracks notinthese";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+    margin-left: 20%;
+    margin-right: 10%;
+    min-width: calc(480px * 0.7);
+    height: calc(100vh - 10rem);
+}
+
+.dropdown-component {
+    grid-area: dropdown;
+}
+
+.in-these-component {
+    grid-area: inthese;
+}
+
+.tracks-component {
+    grid-area: tracks;
+}
+
+.not-in-these-component {
+    grid-area: notinthese;
+}
+
+/* common styles shared by all of the above children */
+.dropdown-component, .in-these-component, .tracks-component, .not-in-these-component {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.app-layout:not(:first-child) {
+    overflow-y: auto;
+}

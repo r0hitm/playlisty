@@ -1,0 +1,11 @@
+.dropdown-component {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    padding: 1rem;
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+    overflow: hidden;
+    overflow: auto;
+}

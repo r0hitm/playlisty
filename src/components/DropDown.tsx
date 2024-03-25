@@ -1,56 +1,86 @@
 // import Select from "react-select";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useSdk from "../hooks/useSdk";
 import "./DropDown.css";
-import { Page, SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
+import { ExtendedPlaylistPage } from "../customInterfaces";
+import { SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
 
-/*
- * TODOs:
- * 1. If the user has more than 50 playlists, then I need to implement infinite
- *  scrolling in the <select> dropdown, below.
- * 2. cache the playlists in a state variable, which will be initially updated
- *  when user clicks the "Fetch Playlist" button.
- * 3. The "Fetch Playlist" button should be disabled when the playlists are
- *  being fetched for the first time.
- * 4. as the user scrolls down the dropdown, the next 50 playlists should
- *  be fetched and appended to the existing list of playlists in the state
- *  variable which should update the UI as well.
- * 5. How and what to capture the selected playlist (info) from the dropdown?
- *      - whatever it is, it should be able to accessible by sibling components
- *        in order to fetch the tracks of the selected playlist. How?
- * 6. Style the dropdown
+export interface DropDownProps {
+    playlists: ExtendedPlaylistPage | null;
+    selectedPlaylist: SimplifiedPlaylist | null;
+    handlePlaylists: (playlists: ExtendedPlaylistPage) => void;
+    handleSelect: (playlist: SimplifiedPlaylist) => void;
+}
+
+/**
+ * This component is concerned with having all the user's playlists
+ * available for selection in a dropdown. The siblings of this component
+ * only care about the playlist object itself, which this component sends
+ * back to the parent component.
  */
-
-export default function DropDown() {
+export default function DropDown({
+    playlists,
+    selectedPlaylist,
+    handlePlaylists,
+    handleSelect,
+}: DropDownProps) {
     const sdk = useSdk();
-    const [playlists, setPlaylists] =
-        useState<Page<SimplifiedPlaylist> | null>();
-    const [triggerFetch, setTriggerFetch] = useState<boolean>(false);
+    // const [playlists, setPlaylists] =
+    //     useState<Page<SimplifiedPlaylist> | null>();
+    const [initialFetch, setInitialFetch] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    useEffect(() => {
-        if (!triggerFetch) return;
+    function fetchPlaylists() {
+        setIsLoading(true);
         (async () => {
             try {
                 const fetchPlaylists =
                     await sdk?.currentUser.playlists.playlists();
-                setPlaylists(() => fetchPlaylists);
+                if (!fetchPlaylists) {
+                    throw new Error(
+                        "Failed to fetch playlists. Either the SDK is not initialized or the request failed."
+                    );
+                }
+                handlePlaylists({
+                    ...fetchPlaylists,
+                    allItems: fetchPlaylists.items,
+                });
+                if (initialFetch) {
+                    setInitialFetch(true);
+                    handleSelect(fetchPlaylists.items[0]);
+                }
                 console.log("Fetched current user's playlists", fetchPlaylists);
-            } catch (e: unknown) {
-                const error = e as Error;
-                console.log("Could not fetch current user's playlists", error);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false);
             }
         })();
-    }, [triggerFetch, sdk]);
+    }
+
+    function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
+        console.log("option event triggered:", event.target.value);
+        const newSelection = playlists?.items.find(
+            playlist => playlist.id === event.target.value // TODO: Don't know if this is correct
+        );
+        if (newSelection) {
+            handleSelect(newSelection);
+        }
+    }
 
     return (
         <div className="dropdown-component">
             <h2>Select Playlist</h2>
-
             {playlists ? (
-                <select className="playlist-selector">
+                <select
+                    className="playlist-selector"
+                    onChange={handleChange}
+                    disabled={isLoading}
+                    defaultValue={selectedPlaylist?.id}
+                >
                     {playlists.items.map(playlist => (
                         <option
-                            className="selected-playlist"
+                            className="select-playlist-item"
                             key={playlist.id}
                             value={playlist.id}
                         >
@@ -59,13 +89,8 @@ export default function DropDown() {
                     ))}
                 </select>
             ) : (
-                <button
-                    type="button"
-                    onClick={() => {
-                        setTriggerFetch(t => !t);
-                    }}
-                >
-                    Fetch Playlist
+                <button onClick={fetchPlaylists} disabled={isLoading}>
+                    {isLoading ? "Loading..." : "Fetch Playlists"}
                 </button>
             )}
         </div>

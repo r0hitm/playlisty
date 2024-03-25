@@ -1,8 +1,20 @@
-export default function Tracks() {
+import { SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
+
+export default function Tracks({
+    activePlaylist,
+}: {
+    activePlaylist: SimplifiedPlaylist | null;
+}) {
     return (
         <div className="tracks-component">
-            <h2>Tracks</h2>
-            <p>Tracks content</p>
+            {activePlaylist ? (
+                <>
+                    <h2>{activePlaylist.name}</h2>
+                    <p>{activePlaylist.description}</p>
+                </>
+            ) : (
+                <h2>No playlist selected</h2>
+            )}
         </div>
     );
 }

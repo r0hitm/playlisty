@@ -27,7 +27,7 @@ export default function DropDown({
     const sdk = useSdk();
     // const [playlists, setPlaylists] =
     //     useState<Page<SimplifiedPlaylist> | null>();
-    const [initialFetch, setInitialFetch] = useState<boolean>(false);
+    const [initialFetch, setInitialFetch] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     function fetchPlaylists() {
@@ -46,7 +46,8 @@ export default function DropDown({
                     allItems: fetchPlaylists.items,
                 });
                 if (initialFetch) {
-                    setInitialFetch(true);
+                    console.log("Initial fetch already done. Setting default select");
+                    setInitialFetch(false);
                     handleSelect(fetchPlaylists.items[0]);
                 }
                 console.log("Fetched current user's playlists", fetchPlaylists);
@@ -61,7 +62,7 @@ export default function DropDown({
     function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
         console.log("option event triggered:", event.target.value);
         const newSelection = playlists?.items.find(
-            playlist => playlist.id === event.target.value // TODO: Don't know if this is correct
+            playlist => playlist.id === event.target.value
         );
         if (newSelection) {
             handleSelect(newSelection);

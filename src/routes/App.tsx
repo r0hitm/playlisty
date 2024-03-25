@@ -45,7 +45,7 @@ function App() {
                 selectedPlaylist={selectedPlaylist}
                 handleSelect={handleSelect}
             />
-            <Tracks />
+            <Tracks activePlaylist={selectedPlaylist} />
             <InThese />
             <NotInThese />
         </div>

@@ -1,11 +1,52 @@
 .tracks-component {
-    /* display: flex;
-    flex-direction: column;
-    justify-content: ; */
-    /* align-items: center; */
-    padding: 1rem;
+    padding: 0.5rem;
     border: 1px solid var(--secondary-color);
     border-radius: 5px;
     overflow: hidden;
     overflow-y: auto;
+}
+
+.tracks-component h2 {
+    margin-bottom: 1rem;
+}
+
+.tracks-component ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.tracks-component li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--secondary-color);
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.tracks-component li:last-child {
+    border-bottom: none;
+}
+
+.tracks-component li span.title {
+    font-weight: bold;
+    max-width: 50%;
+    overflow: hidden;
+    text-align: left;
+}
+
+.tracks-component li span.artist {
+    font-style: italic;
+    max-width: 50%;
+    overflow: hidden;
+    text-align: right;
+}
+
+.tracks-component li.selected {
+    background-color: var(--secondary-color);
+}
+
+.tracks-component li:hover {
+    background-color: var(--secondary-color);
 }

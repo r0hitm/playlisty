@@ -31,7 +31,7 @@
 }
 
 /* common styles shared by all of the above children */
-.dropdown-component, .in-these-component, .tracks-component, .not-in-these-component {
+.dropdown-component, .in-these-component, .not-in-these-component {
     display: flex;
     flex-direction: column;
     justify-content: center;

@@ -12,12 +12,15 @@ import Loading from "./Loading";
 
 export default function Tracks({
     activePlaylist,
+    selectedTrack,
+    handleTrackSelect,
 }: {
     activePlaylist: SimplifiedPlaylist | null;
+    selectedTrack: Track | null;
+    handleTrackSelect: (track: Track | null) => void;
 }) {
     const sdk = useSdk();
     const [tracks, setTracks] = useState<ExtendedPlaylistedTracks | null>(null);
-    const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
 
     const [allTracksLoaded, setAllTracksLoaded] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -52,7 +55,7 @@ export default function Tracks({
 
         return () => {
             setTracks(null);
-            setSelectedTrack(null);
+            handleTrackSelect(null);
         };
     }, [activePlaylist]);
 
@@ -110,7 +113,7 @@ export default function Tracks({
                                 ? "selected"
                                 : ""
                         }
-                        onClick={() => setSelectedTrack(track.track)}
+                        onClick={() => handleTrackSelect(track.track)}
                     >
                         <span className="title">{track.track.name}</span>
                         <span className="artist">

@@ -5,7 +5,7 @@ import DropDown from "../components/DropDown";
 import Tracks from "../components/Tracks";
 import InThese from "../components/InThese";
 import NotInThese from "../components/NotInThese";
-import { SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
+import { SimplifiedPlaylist, Track } from "@spotify/web-api-ts-sdk";
 import { useState } from "react";
 import { ExtendedPlaylistPage } from "../customInterfaces";
 
@@ -16,6 +16,7 @@ function App() {
     );
     const [selectedPlaylist, setSelectedPlaylist] =
         useState<SimplifiedPlaylist | null>(null);
+    const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
 
     if (!sdk) {
         return <Navigate to="/" replace />;
@@ -33,8 +34,12 @@ function App() {
         });
     };
 
-    const handleSelect = (playlist: SimplifiedPlaylist) => {
+    const handlePlaylistSelect = (playlist: SimplifiedPlaylist) => {
         setSelectedPlaylist(playlist);
+    };
+
+    const handleTrackSelect = (track: Track | null) => {
+        setSelectedTrack(track);
     };
 
     return (
@@ -43,11 +48,15 @@ function App() {
                 playlists={playlists}
                 handlePlaylists={handlePlaylists}
                 selectedPlaylist={selectedPlaylist}
-                handleSelect={handleSelect}
+                handleSelect={handlePlaylistSelect}
             />
-            <Tracks activePlaylist={selectedPlaylist} />
-            <InThese />
-            <NotInThese />
+            <Tracks
+                activePlaylist={selectedPlaylist}
+                selectedTrack={selectedTrack}
+                handleTrackSelect={handleTrackSelect}
+            />
+            <InThese playlists={playlists} activeTrack={selectedTrack} />
+            <NotInThese playlists={playlists} activeTrack={selectedTrack} />
         </div>
     );
 }

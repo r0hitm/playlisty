@@ -30,16 +30,12 @@
     grid-area: notinthese;
 }
 
-/* common styles shared by all of the above children */
-.dropdown-component, .in-these-component, .not-in-these-component {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.in-these-component, .not-in-these-component {
     padding: 1rem;
     border: 1px solid var(--secondary-color);
     border-radius: 5px;
     overflow: hidden;
+    overflow-y: auto;
 }
 
 .app-layout:not(:first-child) {

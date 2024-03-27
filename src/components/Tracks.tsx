@@ -8,6 +8,7 @@ import "./Tracks.css";
 import { useEffect, useState } from "react";
 import useSdk from "../hooks/useSdk";
 import { ExtendedPlaylistedTracks } from "../customInterfaces";
+import Loading from "./Loading";
 
 export default function Tracks({
     activePlaylist,
@@ -20,12 +21,6 @@ export default function Tracks({
 
     const [allTracksLoaded, setAllTracksLoaded] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    // DISCOVERED: First fetch is different from subsequent fetches
-    // I cannot use getPlaylistItems(activePlaylist.id) for subsequent fetches
-    // because it will return the same items as the first fetch.
-    // Instead I need to use the tracks.next property to make the request
-    // using sdk.makeRequest("GET", tracks.next) to get the next set of tracks
 
     // effect for the first fetch
     useEffect(() => {
@@ -61,7 +56,6 @@ export default function Tracks({
         };
     }, [activePlaylist]);
 
-    // function for loading more tracks, next set of tracks
     const loadMoreTracks = async () => {
         if (!sdk || !tracks?.next) {
             return;
@@ -69,8 +63,6 @@ export default function Tracks({
 
         try {
             setIsLoading(true);
-            // DEBUGGIN: Trying to make the request w/o the sdk.makeRequest method
-            // if I can get the next set of tracks, then sdk.makeRequest is broken
             const accessToken = await sdk.getAccessToken();
             if (!accessToken) {
                 throw new Error("No access token");
@@ -127,9 +119,9 @@ export default function Tracks({
                     </li>
                 ))}
             </ul>
-            {isLoading && <p>Loading...</p>}
+            {isLoading && <Loading />}
             {allTracksLoaded ? (
-                <p>All tracks loaded</p>
+                <p>Loaded everything</p>
             ) : (
                 <button
                     type="button"

@@ -1,4 +1,9 @@
-import { SimplifiedPlaylist, Track } from "@spotify/web-api-ts-sdk";
+import {
+    PlaylistedTrack,
+    SimplifiedPlaylist,
+    Track,
+    Page,
+} from "@spotify/web-api-ts-sdk";
 import "./Tracks.css";
 import { useEffect, useState } from "react";
 import useSdk from "../hooks/useSdk";
@@ -29,16 +34,25 @@ export default function Tracks({
         }
 
         (async () => {
-            setIsLoading(true);
-            const playlistTracks = await sdk.playlists.getPlaylistItems(
-                activePlaylist.id
-            );
-            const allItems = playlistTracks.items;
-            setTracks({
-                ...playlistTracks,
-                allItems,
-            });
-            setIsLoading(false);
+            try {
+                setIsLoading(true);
+                setAllTracksLoaded(false);
+                const playlistTracks = await sdk.playlists.getPlaylistItems(
+                    activePlaylist.id
+                );
+                const allItems = playlistTracks.items;
+                setTracks({
+                    ...playlistTracks,
+                    allItems,
+                });
+                if (!playlistTracks.next) {
+                    setAllTracksLoaded(true);
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false);
+            }
         })();
 
         return () => {
@@ -46,6 +60,51 @@ export default function Tracks({
             setSelectedTrack(null);
         };
     }, [activePlaylist]);
+
+    // function for loading more tracks, next set of tracks
+    const loadMoreTracks = async () => {
+        if (!sdk || !tracks?.next) {
+            return;
+        }
+
+        try {
+            setIsLoading(true);
+            // DEBUGGIN: Trying to make the request w/o the sdk.makeRequest method
+            // if I can get the next set of tracks, then sdk.makeRequest is broken
+            const accessToken = await sdk.getAccessToken();
+            if (!accessToken) {
+                throw new Error("No access token");
+            }
+            console.log("next", tracks.next);
+            console.log("accessToken", accessToken);
+            const response = await fetch(tracks.next, {
+                headers: {
+                    Authorization: `Bearer ${accessToken.access_token}`,
+                },
+            });
+            if (!response.ok) {
+                throw new Error("Failed to fetch");
+            }
+            console.log("response", response);
+            const nextTracks = (await response.json()) as Page<
+                PlaylistedTrack<Track>
+            >;
+            console.log("nextTracks", nextTracks);
+            const allItems = [...tracks.allItems, ...nextTracks.items];
+            setTracks({
+                ...nextTracks,
+                allItems,
+            });
+
+            if (!nextTracks.next) {
+                setAllTracksLoaded(true);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className="tracks-component">
@@ -76,7 +135,7 @@ export default function Tracks({
                     type="button"
                     onClick={() => {
                         console.log("Loding more tracks...");
-                        // A function call to load more tracks
+                        void loadMoreTracks();
                         console.log("Should be loaded");
                     }}
                 >

@@ -10,7 +10,6 @@ export default function Tracks({
     activePlaylist: SimplifiedPlaylist | null;
 }) {
     const sdk = useSdk();
-    // const [intialFetch, setInitialFetch] = useState<boolean>(true);
     const [tracks, setTracks] = useState<ExtendedPlaylistedTracks | null>(null);
     const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
 
@@ -23,49 +22,29 @@ export default function Tracks({
     // Instead I need to use the tracks.next property to make the request
     // using sdk.makeRequest("GET", tracks.next) to get the next set of tracks
 
-    async function fetchTracks(
-        activePlaylistOrNextUrl: SimplifiedPlaylist | string | null
-    ) {
-        if (!sdk || !activePlaylistOrNextUrl) {
+    // effect for the first fetch
+    useEffect(() => {
+        if (!sdk || !activePlaylist) {
             return;
         }
-        setIsLoading(true);
 
-        let tracks;
-        let extendedTracks: ExtendedPlaylistedTracks | null = null;
-
-        if (typeof activePlaylistOrNextUrl === "string") {
-            const resp = await sdk.makeRequest("GET", activePlaylistOrNextUrl);
-            console.log("Next URL response", resp);
-            // extendedTracks = {
-            //     ...tracks,
-            //     allItems: tracks.items,
-            // };
-        } else {
-            tracks = await sdk.playlists.getPlaylistItems(
-                activePlaylistOrNextUrl.id
+        (async () => {
+            setIsLoading(true);
+            const playlistTracks = await sdk.playlists.getPlaylistItems(
+                activePlaylist.id
             );
-            extendedTracks = {
-                ...tracks,
-                allItems: [...tracks.items],
-            };
-        }
+            const allItems = playlistTracks.items;
+            setTracks({
+                ...playlistTracks,
+                allItems,
+            });
+            setIsLoading(false);
+        })();
 
-        // const tracks = await sdk.playlists.getPlaylistItems(activePlaylist.id);
-        // const extendedTracks: ExtendedPlaylistedTracks = {
-        //     ...tracks,
-        //     allItems: intialFetch ? tracks.items : [...tracks.items],
-        // };
-        setTracks(extendedTracks);
-        setIsLoading(false);
-    }
-
-    useEffect(() => {
-        (async () => await fetchTracks(activePlaylist))();
-        // setInitialFetch(false);
-        setSelectedTrack(null);
-
-        // return () => setInitialFetch(true);
+        return () => {
+            setTracks(null);
+            setSelectedTrack(null);
+        };
     }, [activePlaylist]);
 
     return (
@@ -97,7 +76,8 @@ export default function Tracks({
                     type="button"
                     onClick={() => {
                         console.log("Loding more tracks...");
-                        void fetchTracks(tracks?.next ?? null);
+                        // A function call to load more tracks
+                        console.log("Should be loaded");
                     }}
                 >
                     Load more

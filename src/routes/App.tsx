@@ -7,7 +7,7 @@ import InThese from "../components/InThese";
 import NotInThese from "../components/NotInThese";
 import {
     Page,
-    // PlaylistedTrack,
+    PlaylistedTrack,
     SimplifiedPlaylist,
     Track,
 } from "@spotify/web-api-ts-sdk";
@@ -87,6 +87,8 @@ function App() {
             );
 
             const results = await Promise.all(promises);
+            // How to fetch the next pages of tracks for each playlist simultaneously again?
+
             const playlistTracks: PlaylistTracks[] = results.map(
                 (playlistTrack, index) => {
                     return {
@@ -98,6 +100,73 @@ function App() {
                     };
                 }
             );
+
+            let nextUrls = playlistTracks
+                .filter(playlistTrack => playlistTrack.tracks.next)
+                .map(playlistTrack => ({
+                    playlist_id: playlistTrack.playlist_id,
+                    next: playlistTrack.tracks.next!,
+                }));
+
+            alert(
+                `Out of ${playlistTracks.length} playlists, ${nextUrls.length} have more tracks to fetch.`
+            );
+
+            while (nextUrls.length > 0) {
+                const accessToken = await sdk!.getAccessToken();
+                if (!accessToken) {
+                    throw new Error("Failed to get access token.");
+                }
+                const nextTracksPromises = nextUrls.map(playlistTrack =>
+                    fetch(playlistTrack.next, {
+                        headers: {
+                            Authorization: `Bearer ${accessToken.access_token}`,
+                        },
+                    })
+                );
+                const nextTracksPages = await Promise.all(nextTracksPromises);
+
+                const nextTracks = await Promise.all(
+                    nextTracksPages.map(async (nextTracksPage, index) => {
+                        if (!nextTracksPage.ok) {
+                            throw new Error(
+                                `Failed to fetch next page of tracks for playlist ${nextUrls[index].playlist_id}: ${nextTracksPage.statusText}`
+                            );
+                        }
+                        return {
+                            playlist_id: nextUrls[index].playlist_id,
+                            tracks: (await nextTracksPage.json()) as Page<
+                                PlaylistedTrack<Track>
+                            >,
+                        };
+                    })
+                );
+
+                playlistTracks.forEach(playlistTrack => {
+                    const nextTrack = nextTracks.find(
+                        nextTrack =>
+                            nextTrack.playlist_id === playlistTrack.playlist_id
+                    );
+                    if (nextTrack) {
+                        playlistTrack.tracks.allItems.push(
+                            ...nextTrack.tracks.items
+                        );
+                        playlistTrack.tracks.next = nextTrack.tracks.next;
+                    }
+                });
+
+                nextUrls = nextTracks
+                    .filter(playlistTrack => playlistTrack.tracks.next)
+                    .map(playlistTrack => ({
+                        playlist_id: playlistTrack.playlist_id,
+                        next: playlistTrack.tracks.next!,
+                    }));
+
+                console.log("Next tracks wanted", nextUrls);
+                alert(
+                    `Again: Out of ${playlistTracks.length} playlists, ${nextUrls.length} have more tracks to fetch.`
+                );
+            }
 
             setPlaylistTracks(playlistTracks);
         } catch (error) {

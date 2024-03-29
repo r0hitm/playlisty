@@ -205,6 +205,9 @@ function App() {
                 }}
                 selectedPlaylist={selectedPlaylist}
                 handleSelect={handlePlaylistSelect}
+                clearTrackSelection={() => {
+                    handleTrackSelect(null);
+                }}
                 loading={isLoading}
             />
             <Tracks
@@ -217,8 +220,15 @@ function App() {
                 handleTrackSelect={handleTrackSelect}
                 loading={isLoading}
             />
-            <InThese playlists={playlists} activeTrack={selectedTrack} />
-            <NotInThese playlists={playlists} activeTrack={selectedTrack} />
+            <InThese
+                playlistTracks={playlistTracks}
+                activeTrack={selectedTrack}
+                activePlaylist={selectedPlaylist}
+            />
+            <NotInThese
+                playlistTracks={playlistTracks}
+                activeTrack={selectedTrack}
+            />
         </div>
     );
 }

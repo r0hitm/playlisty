@@ -8,6 +8,7 @@ export interface DropDownProps {
     fetchPlaylists: () => void;
     handleSelect: (playlist: SimplifiedPlaylist) => void;
     loading: boolean;
+    clearTrackSelection: () => void;
 }
 
 /**
@@ -21,6 +22,7 @@ export default function DropDown({
     selectedPlaylist,
     fetchPlaylists,
     handleSelect,
+    clearTrackSelection,
     loading,
 }: DropDownProps) {
     function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
@@ -29,7 +31,9 @@ export default function DropDown({
             playlist => playlist.id === event.target.value
         );
         if (newSelection) {
+            console.log("new selection:", newSelection);
             handleSelect(newSelection);
+            clearTrackSelection();
         }
     }
 

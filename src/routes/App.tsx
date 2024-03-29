@@ -7,7 +7,7 @@ import InThese from "../components/InThese";
 import NotInThese from "../components/NotInThese";
 import {
     Page,
-    PlaylistedTrack,
+    // PlaylistedTrack,
     SimplifiedPlaylist,
     Track,
 } from "@spotify/web-api-ts-sdk";
@@ -33,46 +33,72 @@ function App() {
     const fetchPlaylistsAndTracks = useCallback(async () => {
         setIsLoading(true);
         try {
-            const fetchPlaylists = await sdk?.currentUser.playlists.playlists();
+            // Run the playlist fetch until .next is null
+            const fetchPlaylists = await sdk!.currentUser.playlists.playlists();
             if (!fetchPlaylists) {
                 throw new Error(
                     "Failed to fetch playlists. Either the SDK is not initialized or the request failed."
                 );
             }
-            setPlaylists(prev => {
-                if (prev) {
-                    return {
-                        ...prev,
-                        allItems: [...prev.allItems, ...fetchPlaylists.items],
-                    };
+            let allPlaylists: ExtendedPlaylistPage = {
+                ...fetchPlaylists,
+                allItems: fetchPlaylists.items,
+            };
+            let next = fetchPlaylists.next;
+            while (next) {
+                const accessToken = await sdk!.getAccessToken();
+                if (!accessToken) {
+                    throw new Error("Failed to get access token.");
                 }
-                return {
-                    ...fetchPlaylists,
-                    allItems: fetchPlaylists.items,
+                const nextPlaylistsPageResp = await fetch(next, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken.access_token}`,
+                    },
+                });
+                if (!nextPlaylistsPageResp.ok) {
+                    throw new Error(
+                        `Failed to fetch next page of playlists: ${nextPlaylistsPageResp.statusText}`
+                    );
+                }
+                const nextPlaylistsPage =
+                    (await nextPlaylistsPageResp.json()) as Page<SimplifiedPlaylist>;
+                console.log(
+                    "Fetched next page of playlists",
+                    nextPlaylistsPage
+                );
+                allPlaylists = {
+                    ...allPlaylists,
+                    allItems: [
+                        ...allPlaylists.allItems,
+                        ...nextPlaylistsPage.items,
+                    ],
                 };
-            });
+                next = nextPlaylistsPage.next;
+            }
+            setPlaylists(allPlaylists);
             if (!playlists) {
                 console.log("Initial fetch for playlists complete.");
                 handlePlaylistSelect(fetchPlaylists.items[0]);
             }
-            console.log("Fetched current user's playlists", fetchPlaylists);
+            // console.log("Fetched current user's playlists", fetchPlaylists);
 
             const promises = fetchPlaylists.items.map(playlist =>
-                sdk?.playlists.getPlaylistItems(playlist.id)
+                sdk!.playlists.getPlaylistItems(playlist.id)
             );
 
-            const results = (await Promise.all(promises)) as Page<
-                PlaylistedTrack<Track>
-            >[];
-            const playlistTracks = results.map((playlistTrack, index) => {
-                return {
-                    playlist_id: fetchPlaylists.items[index].id,
-                    tracks: {
-                        ...playlistTrack,
-                        allItems: playlistTrack?.items ?? [],
-                    },
-                };
-            });
+            const results = await Promise.all(promises);
+            const playlistTracks: PlaylistTracks[] = results.map(
+                (playlistTrack, index) => {
+                    return {
+                        playlist_id: fetchPlaylists.items[index].id,
+                        tracks: {
+                            ...playlistTrack,
+                            allItems: playlistTrack?.items ?? [],
+                        },
+                    };
+                }
+            );
+
             setPlaylistTracks(playlistTracks);
         } catch (error) {
             console.error(error);

@@ -9,3 +9,7 @@
     overflow: hidden;
     overflow: auto;
 }
+
+.dropdown-component h2 {
+    margin-bottom: 1rem;
+}

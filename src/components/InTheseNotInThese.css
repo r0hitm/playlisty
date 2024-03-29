@@ -1,0 +1,9 @@
+.in-these-component h2, .not-in-these-component h2 {
+    margin-bottom: 1rem;
+}
+
+.in-these-component ul, .not-in-these-component ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}

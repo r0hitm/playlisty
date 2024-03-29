@@ -35,10 +35,7 @@ export default function NotInThese({
 
     return (
         <div className="not-in-these-component">
-            <h2>Not In These</h2>
-            <p>
-                Track: <strong>{activeTrack ?? "None"}</strong>
-            </p>
+            <h2>NOT In Playlists</h2>
             <ul>
                 {notInThese.map(playlistName => (
                     <li key={playlistName}>{playlistName}</li>

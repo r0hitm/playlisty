@@ -1,6 +1,7 @@
 // import { Track } from "@spotify/web-api-ts-sdk";
 import { useEffect, useState } from "react";
 import { PlaylistTracks } from "../customInterfaces";
+import "./InTheseNotInThese.css"
 
 export default function InThese({
     playlistTracks,

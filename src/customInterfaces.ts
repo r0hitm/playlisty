@@ -15,5 +15,6 @@ export interface ExtendedPlaylistedTracks extends Page<PlaylistedTrack<Track>> {
 
 export interface PlaylistTracks {
     playlist_id: string;
+    name: string;
     tracks: ExtendedPlaylistedTracks;
 }

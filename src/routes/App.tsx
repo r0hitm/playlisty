@@ -93,6 +93,7 @@ function App() {
                 (playlistTrack, index) => {
                     return {
                         playlist_id: fetchPlaylists.items[index].id,
+                        name: fetchPlaylists.items[index].name,
                         tracks: {
                             ...playlistTrack,
                             allItems: playlistTrack?.items ?? [],

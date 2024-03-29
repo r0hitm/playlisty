@@ -108,9 +108,9 @@ function App() {
                     next: playlistTrack.tracks.next!,
                 }));
 
-            alert(
-                `Out of ${playlistTracks.length} playlists, ${nextUrls.length} have more tracks to fetch.`
-            );
+            // alert(
+            //     `Out of ${playlistTracks.length} playlists, ${nextUrls.length} have more tracks to fetch.`
+            // );
 
             while (nextUrls.length > 0) {
                 const accessToken = await sdk!.getAccessToken();
@@ -163,9 +163,9 @@ function App() {
                     }));
 
                 console.log("Next tracks wanted", nextUrls);
-                alert(
-                    `Again: Out of ${playlistTracks.length} playlists, ${nextUrls.length} have more tracks to fetch.`
-                );
+                // alert(
+                //     `Again: Out of ${playlistTracks.length} playlists, ${nextUrls.length} have more tracks to fetch.`
+                // );
             }
 
             setPlaylistTracks(playlistTracks);

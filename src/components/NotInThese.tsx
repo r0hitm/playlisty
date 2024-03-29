@@ -1,4 +1,3 @@
-import { Track } from "@spotify/web-api-ts-sdk";
 import { ExtendedPlaylistPage } from "../customInterfaces";
 
 export default function NotInThese({
@@ -6,13 +5,13 @@ export default function NotInThese({
     activeTrack,
 }: {
     playlists: ExtendedPlaylistPage | null;
-    activeTrack: Track | null;
+    activeTrack: string | null;
 }) {
     return (
         <div className="not-in-these-component">
             <h2>Not In These</h2>
             <p>
-                Track: {activeTrack?.name ?? "-"}, Id: {activeTrack?.id ?? "-"}
+                Track: <strong>{activeTrack ?? "None"}</strong>
             </p>
             <ul>
                 {playlists?.allItems.map(playlist => (

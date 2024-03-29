@@ -1,4 +1,4 @@
-import { Track } from "@spotify/web-api-ts-sdk";
+// import { Track } from "@spotify/web-api-ts-sdk";
 import { ExtendedPlaylistPage } from "../customInterfaces";
 
 export default function InThese({
@@ -6,13 +6,13 @@ export default function InThese({
     activeTrack,
 }: {
     playlists: ExtendedPlaylistPage | null;
-    activeTrack: Track | null;
+    activeTrack: string | null;
 }) {
     return (
         <div className="in-these-component">
             <h2>In These</h2>
             <p>
-                Track: {activeTrack?.name ?? "-"}, Id: {activeTrack?.id ?? "-"}
+                Track: <strong>{activeTrack ?? "None"}</strong>
             </p>
             <ul>
                 {playlists?.allItems.map(playlist => (

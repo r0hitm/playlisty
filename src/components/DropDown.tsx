@@ -4,7 +4,7 @@ import { SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
 
 export interface DropDownProps {
     playlists: ExtendedPlaylistPage | null;
-    selectedPlaylist: SimplifiedPlaylist | null;
+    selectedPlaylist: string | null;
     fetchPlaylists: () => void;
     handleSelect: (playlist: SimplifiedPlaylist) => void;
     loading: boolean;
@@ -41,7 +41,7 @@ export default function DropDown({
                     className="playlist-selector"
                     onChange={handleChange}
                     disabled={loading}
-                    defaultValue={selectedPlaylist?.id}
+                    defaultValue={selectedPlaylist ?? undefined}
                 >
                     {playlists.items.map(playlist => (
                         <option

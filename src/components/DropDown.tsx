@@ -1,6 +1,3 @@
-// import Select from "react-select";
-import { useState } from "react";
-import useSdk from "../hooks/useSdk";
 import "./DropDown.css";
 import { ExtendedPlaylistPage } from "../customInterfaces";
 import { SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
@@ -8,8 +5,9 @@ import { SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
 export interface DropDownProps {
     playlists: ExtendedPlaylistPage | null;
     selectedPlaylist: SimplifiedPlaylist | null;
-    handlePlaylists: (playlists: ExtendedPlaylistPage) => void;
+    fetchPlaylists: () => void;
     handleSelect: (playlist: SimplifiedPlaylist) => void;
+    loading: boolean;
 }
 
 /**
@@ -21,44 +19,10 @@ export interface DropDownProps {
 export default function DropDown({
     playlists,
     selectedPlaylist,
-    handlePlaylists,
+    fetchPlaylists,
     handleSelect,
+    loading,
 }: DropDownProps) {
-    const sdk = useSdk();
-    // const [playlists, setPlaylists] =
-    //     useState<Page<SimplifiedPlaylist> | null>();
-    const [initialFetch, setInitialFetch] = useState<boolean>(true);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    function fetchPlaylists() {
-        setIsLoading(true);
-        (async () => {
-            try {
-                const fetchPlaylists =
-                    await sdk?.currentUser.playlists.playlists();
-                if (!fetchPlaylists) {
-                    throw new Error(
-                        "Failed to fetch playlists. Either the SDK is not initialized or the request failed."
-                    );
-                }
-                handlePlaylists({
-                    ...fetchPlaylists,
-                    allItems: fetchPlaylists.items,
-                });
-                if (initialFetch) {
-                    console.log("Initial fetch already done. Setting default select");
-                    setInitialFetch(false);
-                    handleSelect(fetchPlaylists.items[0]);
-                }
-                console.log("Fetched current user's playlists", fetchPlaylists);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setIsLoading(false);
-            }
-        })();
-    }
-
     function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
         console.log("option event triggered:", event.target.value);
         const newSelection = playlists?.items.find(
@@ -76,7 +40,7 @@ export default function DropDown({
                 <select
                     className="playlist-selector"
                     onChange={handleChange}
-                    disabled={isLoading}
+                    disabled={loading}
                     defaultValue={selectedPlaylist?.id}
                 >
                     {playlists.items.map(playlist => (
@@ -90,8 +54,8 @@ export default function DropDown({
                     ))}
                 </select>
             ) : (
-                <button onClick={fetchPlaylists} disabled={isLoading}>
-                    {isLoading ? "Loading..." : "Fetch Playlists"}
+                <button onClick={fetchPlaylists} disabled={loading}>
+                    {loading ? "Loading..." : "Fetch Playlists"}
                 </button>
             )}
         </div>

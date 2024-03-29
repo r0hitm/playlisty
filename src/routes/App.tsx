@@ -7,13 +7,19 @@ import InThese from "../components/InThese";
 import NotInThese from "../components/NotInThese";
 import { SimplifiedPlaylist, Track } from "@spotify/web-api-ts-sdk";
 import { useState } from "react";
-import { ExtendedPlaylistPage } from "../customInterfaces";
+import { ExtendedPlaylistPage, /*PlaylistTracks*/ } from "../customInterfaces";
 
 function App() {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const sdk = useSdk();
+
     const [playlists, setPlaylists] = useState<ExtendedPlaylistPage | null>(
         null
     );
+    // const [playlistTracks, setPlaylistTracks] = useState<PlaylistTracks | null>(
+    //     null
+    // );
+
     const [selectedPlaylist, setSelectedPlaylist] =
         useState<SimplifiedPlaylist | null>(null);
     const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
@@ -34,6 +40,34 @@ function App() {
         });
     };
 
+    function fetchPlaylists() {
+        setIsLoading(true);
+        (async () => {
+            try {
+                const fetchPlaylists =
+                    await sdk?.currentUser.playlists.playlists();
+                if (!fetchPlaylists) {
+                    throw new Error(
+                        "Failed to fetch playlists. Either the SDK is not initialized or the request failed."
+                    );
+                }
+                handlePlaylists({
+                    ...fetchPlaylists,
+                    allItems: fetchPlaylists.items,
+                });
+                if (!playlists) {
+                    console.log("Initial fetch for playlists complete.");
+                    handlePlaylistSelect(fetchPlaylists.items[0]);
+                }
+                console.log("Fetched current user's playlists", fetchPlaylists);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setIsLoading(false);
+            }
+        })();
+    }
+
     const handlePlaylistSelect = (playlist: SimplifiedPlaylist) => {
         setSelectedPlaylist(playlist);
     };
@@ -46,9 +80,10 @@ function App() {
         <div className="app-layout">
             <DropDown
                 playlists={playlists}
-                handlePlaylists={handlePlaylists}
+                fetchPlaylists={fetchPlaylists}
                 selectedPlaylist={selectedPlaylist}
                 handleSelect={handlePlaylistSelect}
+                loading={isLoading}
             />
             <Tracks
                 activePlaylist={selectedPlaylist}

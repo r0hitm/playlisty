@@ -7,7 +7,7 @@ import InThese from "../components/InThese";
 import NotInThese from "../components/NotInThese";
 import { SimplifiedPlaylist, Track } from "@spotify/web-api-ts-sdk";
 import { useState } from "react";
-import { ExtendedPlaylistPage, /*PlaylistTracks*/ } from "../customInterfaces";
+import { ExtendedPlaylistPage /*PlaylistTracks*/ } from "../customInterfaces";
 
 function App() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -28,17 +28,17 @@ function App() {
         return <Navigate to="/" replace />;
     }
 
-    const handlePlaylists = (playlists: ExtendedPlaylistPage) => {
-        setPlaylists(prev => {
-            if (prev) {
-                return {
-                    ...prev,
-                    allItems: [...prev.allItems, ...playlists.items],
-                };
-            }
-            return playlists;
-        });
-    };
+    // const handlePlaylists = (playlists: ExtendedPlaylistPage) => {
+    //     setPlaylists(prev => {
+    //         if (prev) {
+    //             return {
+    //                 ...prev,
+    //                 allItems: [...prev.allItems, ...playlists.items],
+    //             };
+    //         }
+    //         return playlists;
+    //     });
+    // };
 
     function fetchPlaylists() {
         setIsLoading(true);
@@ -51,9 +51,24 @@ function App() {
                         "Failed to fetch playlists. Either the SDK is not initialized or the request failed."
                     );
                 }
-                handlePlaylists({
-                    ...fetchPlaylists,
-                    allItems: fetchPlaylists.items,
+                // handlePlaylists({
+                //     ...fetchPlaylists,
+                //     allItems: fetchPlaylists.items,
+                // });
+                setPlaylists(prev => {
+                    if (prev) {
+                        return {
+                            ...prev,
+                            allItems: [
+                                ...prev.allItems,
+                                ...fetchPlaylists.items,
+                            ],
+                        };
+                    }
+                    return {
+                        ...fetchPlaylists,
+                        allItems: fetchPlaylists.items,
+                    };
                 });
                 if (!playlists) {
                     console.log("Initial fetch for playlists complete.");

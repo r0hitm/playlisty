@@ -1,11 +1,11 @@
 // import useSdk from "../hooks/useSdk";
-import "./PlaylistItem.css"
+import "./PlaylistItem.css";
 
 interface PlaylistItemProps {
     title: string;
     addBtn: boolean; // controls icon; true = add, false = remove
+    isOwner: boolean;
 }
-
 
 /// Need to know if the the user has edit permissions on the playlist
 /// do not show the add/remove button if the user does not have edit permissions
@@ -13,6 +13,7 @@ interface PlaylistItemProps {
 export default function PlaylistItem({
     title,
     addBtn = true,
+    isOwner
 }: PlaylistItemProps) {
     // const sdk = useSdk();
 
@@ -24,6 +25,7 @@ export default function PlaylistItem({
                     <button
                         type="button"
                         title="Add to playlist"
+                        disabled={!isOwner}
                         onClick={() => {
                             console.log("TODO: Adding track to playlist...");
                             // sdk.addTrackToPlaylist();
@@ -45,6 +47,7 @@ export default function PlaylistItem({
                     <button
                         type="button"
                         title="Remove from playlist"
+                        disabled={!isOwner}
                         onClick={() => {
                             console.log(
                                 "TODO: Removing track from playlist..."

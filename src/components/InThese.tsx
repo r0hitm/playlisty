@@ -1,6 +1,6 @@
 // import { Track } from "@spotify/web-api-ts-sdk";
 import { useEffect, useState } from "react";
-import { PlaylistTracks } from "../customInterfaces";
+import { PlaylistTracks, filteredPlaylistsState } from "../customInterfaces";
 import "./InTheseNotInThese.css";
 import PlaylistItem from "./PlaylistItem";
 
@@ -13,14 +13,14 @@ export default function InThese({
     activeTrack: string | null;
     activePlaylist: string | null;
 }) {
-    const [inThese, setInThese] = useState<string[]>([]);
+    const [inThese, setInThese] = useState<filteredPlaylistsState[]>([]);
 
     useEffect(() => {
         if (!playlistTracks || !activeTrack) {
             return;
         }
 
-        const inThese: string[] = [];
+        const inThese: filteredPlaylistsState[] = [];
         playlistTracks.forEach(playlist => {
             if (
                 playlist.tracks.allItems.some(
@@ -28,7 +28,11 @@ export default function InThese({
                 ) &&
                 playlist.playlist_id !== activePlaylist
             ) {
-                inThese.push(playlist.name);
+                inThese.push({
+                    id: playlist.playlist_id,
+                    name: playlist.name,
+                    isOwner: playlist.is_owner,
+                });
             }
         });
 
@@ -43,10 +47,18 @@ export default function InThese({
         <div className="in-these-component">
             <h2>Also In Playlists</h2>
             <ul>
-                {inThese.map((playlistName, i) => (
-                    <li key={playlistName} className="playlist-item-wrapper">
+                {inThese.map((playlist, i) => (
+                    // <li key={playlistName} className="playlist-item-wrapper">
+                    //     <span>{i + 1}. </span>
+                    //     <PlaylistItem title={playlistName} addBtn={false} />
+                    // </li>
+                    <li key={playlist.id} className="playlist-item-wrapper">
                         <span>{i + 1}. </span>
-                        <PlaylistItem title={playlistName} addBtn={false} />
+                        <PlaylistItem
+                            title={playlist.name}
+                            addBtn={false}
+                            isOwner={playlist.isOwner}
+                        />
                     </li>
                 ))}
             </ul>

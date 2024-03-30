@@ -20,7 +20,16 @@ export interface ExtendedPlaylistedTracks extends Page<PlaylistedTrack<Track>> {
 export interface PlaylistTracks {
     playlist_id: string;
     name: string;
-    is_collaborative: boolean;
+    // is_collaborative: boolean;
     is_owner: boolean;
     tracks: ExtendedPlaylistedTracks;
+}
+
+// Used by InThese and NotInThese components for
+// filtered playlists rendering state
+export interface filteredPlaylistsState {
+    id: string;
+    name: string;
+    isOwner: boolean;
+    // isCollaborator: boolean;
 }

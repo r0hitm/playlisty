@@ -13,3 +13,10 @@
 .dropdown-component h2 {
     margin-bottom: 1rem;
 }
+
+select.playlist-selector {
+    width: 100%;
+    padding: 0.4rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}

@@ -12,7 +12,7 @@ export default function Root() {
         if (params.has("code")) {
             void logIn();
         }
-    });
+    }, []);
 
     return (
         <>

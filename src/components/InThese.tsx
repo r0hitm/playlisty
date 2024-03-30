@@ -48,10 +48,6 @@ export default function InThese({
             <h2>Also In Playlists</h2>
             <ul>
                 {inThese.map((playlist, i) => (
-                    // <li key={playlistName} className="playlist-item-wrapper">
-                    //     <span>{i + 1}. </span>
-                    //     <PlaylistItem title={playlistName} addBtn={false} />
-                    // </li>
                     <li key={playlist.id} className="playlist-item-wrapper">
                         <span>{i + 1}. </span>
                         <PlaylistItem

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PlaylistTracks } from "../customInterfaces";
+import { PlaylistTracks, filteredPlaylistsState } from "../customInterfaces";
 import PlaylistItem from "./PlaylistItem";
 
 export default function NotInThese({
@@ -9,21 +9,25 @@ export default function NotInThese({
     playlistTracks: PlaylistTracks[] | null;
     activeTrack: string | null;
 }) {
-    const [notInThese, setNotInThese] = useState<string[]>([]);
+    const [notInThese, setNotInThese] = useState<filteredPlaylistsState[]>([]);
 
     useEffect(() => {
         if (!playlistTracks || !activeTrack) {
             return;
         }
 
-        const notInThese: string[] = [];
+        const notInThese: filteredPlaylistsState[] = [];
         playlistTracks.forEach(playlist => {
             if (
                 !playlist.tracks.allItems.some(
                     track => track.track.id === activeTrack
                 )
             ) {
-                notInThese.push(playlist.name);
+                notInThese.push({
+                    id: playlist.playlist_id,
+                    name: playlist.name,
+                    isOwner: playlist.is_owner,
+                });
             }
         });
 
@@ -38,10 +42,14 @@ export default function NotInThese({
         <div className="not-in-these-component">
             <h2>NOT In Playlists</h2>
             <ul>
-                {notInThese.map((playlistName, i) => (
-                    <li key={playlistName} className="playlist-item-wrapper">
+                {notInThese.map((playlist, i) => (
+                    <li key={playlist.id} className="playlist-item-wrapper">
                         <span>{i + 1}. </span>
-                        <PlaylistItem title={playlistName} addBtn={true} />
+                        <PlaylistItem
+                            title={playlist.name}
+                            addBtn={true}
+                            isOwner={playlist.isOwner}
+                        />
                     </li>
                 ))}
             </ul>

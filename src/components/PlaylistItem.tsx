@@ -1,22 +1,22 @@
-// import useSdk from "../hooks/useSdk";
 import "./PlaylistItem.css";
 
 interface PlaylistItemProps {
     title: string;
-    addBtn: boolean; // controls icon; true = add, false = remove
+    playlistId: string;
+    addBtn: boolean;
     isOwner: boolean;
+    handleClick: (playlistId: string) => Promise<void>;
+    loading: boolean;
 }
-
-/// Need to know if the the user has edit permissions on the playlist
-/// do not show the add/remove button if the user does not have edit permissions
 
 export default function PlaylistItem({
     title,
+    playlistId,
     addBtn = true,
-    isOwner
+    isOwner,
+    handleClick,
+    loading,
 }: PlaylistItemProps) {
-    // const sdk = useSdk();
-
     return (
         <div className="playlist-item">
             <div className="playlist-title">{title}</div>
@@ -25,10 +25,9 @@ export default function PlaylistItem({
                     <button
                         type="button"
                         title="Add to playlist"
-                        disabled={!isOwner}
+                        disabled={!isOwner || loading}
                         onClick={() => {
-                            console.log("TODO: Adding track to playlist...");
-                            // sdk.addTrackToPlaylist();
+                            void handleClick(playlistId);
                         }}
                     >
                         <svg
@@ -47,12 +46,9 @@ export default function PlaylistItem({
                     <button
                         type="button"
                         title="Remove from playlist"
-                        disabled={!isOwner}
+                        disabled={!isOwner || loading}
                         onClick={() => {
-                            console.log(
-                                "TODO: Removing track from playlist..."
-                            );
-                            // sdk.removeTrackFromPlaylist();
+                            void handleClick(playlistId);
                         }}
                     >
                         <svg

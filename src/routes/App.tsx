@@ -28,7 +28,7 @@ function App() {
     const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(
         null
     );
-    const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
+    const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
 
     const fetchPlaylistsAndTracks = useCallback(async () => {
         setIsLoading(true);
@@ -200,7 +200,11 @@ function App() {
     };
 
     const handleTrackSelect = (track: Track | null) => {
-        setSelectedTrack(track?.id ?? null);
+        setSelectedTrack(track);
+    };
+
+    const updatePlaylistsTracks = (newPlaylistTracks: PlaylistTracks[]) => {
+        setPlaylistTracks(newPlaylistTracks);
     };
 
     return (
@@ -230,18 +234,22 @@ function App() {
                         playlist => playlist.playlist_id === selectedPlaylist
                     ) ?? null
                 }
-                selectedTrack={selectedTrack}
+                selectedTrack={selectedTrack?.id ?? ""}
                 handleTrackSelect={handleTrackSelect}
                 loading={isLoading}
             />
             <InThese
                 playlistTracks={playlistTracks}
-                activeTrack={selectedTrack}
-                activePlaylist={selectedPlaylist}
+                activeTrackId={selectedTrack?.id ?? ""}
+                activeTrackUri={selectedTrack?.uri ?? ""}
+                activePlaylist={selectedPlaylist} // To prevent showing up the selected playlist
+                updatePlaylistTracks={updatePlaylistsTracks}
             />
             <NotInThese
                 playlistTracks={playlistTracks}
-                activeTrack={selectedTrack}
+                activeTrackId={selectedTrack?.id ?? ""}
+                activeTrackUri={selectedTrack?.uri ?? ""}
+                updatePlaylistTracks={updatePlaylistsTracks}
             />
         </div>
     );

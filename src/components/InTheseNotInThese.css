@@ -7,3 +7,14 @@
     padding: 0;
     margin: 0;
 }
+
+.playlist-item-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem 0;
+}
+
+.playlist-item-wrapper > span {
+    margin-right: 0.5rem;
+}

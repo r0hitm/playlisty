@@ -1,7 +1,8 @@
 // import { Track } from "@spotify/web-api-ts-sdk";
 import { useEffect, useState } from "react";
 import { PlaylistTracks } from "../customInterfaces";
-import "./InTheseNotInThese.css"
+import "./InTheseNotInThese.css";
+import PlaylistItem from "./PlaylistItem";
 
 export default function InThese({
     playlistTracks,
@@ -42,8 +43,11 @@ export default function InThese({
         <div className="in-these-component">
             <h2>Also In Playlists</h2>
             <ul>
-                {inThese.map(playlistName => (
-                    <li key={playlistName}>{playlistName}</li>
+                {inThese.map((playlistName, i) => (
+                    <li key={playlistName} className="playlist-item-wrapper">
+                        <span>{i + 1}. </span>
+                        <PlaylistItem title={playlistName} addBtn={false} />
+                    </li>
                 ))}
             </ul>
         </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { PlaylistTracks } from "../customInterfaces";
+import PlaylistItem from "./PlaylistItem";
 
 export default function NotInThese({
     playlistTracks,
@@ -37,8 +38,11 @@ export default function NotInThese({
         <div className="not-in-these-component">
             <h2>NOT In Playlists</h2>
             <ul>
-                {notInThese.map(playlistName => (
-                    <li key={playlistName}>{playlistName}</li>
+                {notInThese.map((playlistName, i) => (
+                    <li key={playlistName} className="playlist-item-wrapper">
+                        <span>{i + 1}. </span>
+                        <PlaylistItem title={playlistName} addBtn={true} />
+                    </li>
                 ))}
             </ul>
         </div>

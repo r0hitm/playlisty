@@ -9,10 +9,12 @@ export interface useSpotifyInterface {
     sdk: SpotifyApi | null;
     logIn: () => Promise<void>;
     logOut: () => void;
+    ownerId: string;
 }
 
 export function useSpotify(): useSpotifyInterface {
     const [sdk, setSdk] = useState<SpotifyApi | null>(null);
+    const [ownerId, setOwnerId] = useState<string>("");
 
     async function logIn() {
         const auth = new AuthorizationCodeWithPKCEStrategy(
@@ -27,6 +29,8 @@ export function useSpotify(): useSpotifyInterface {
 
             if (authenticated) {
                 setSdk(() => internalSdk);
+                const user = await internalSdk.currentUser.profile();
+                setOwnerId(user.id);
             }
         } catch (e: unknown) {
             const error = e as Error;
@@ -48,5 +52,5 @@ export function useSpotify(): useSpotifyInterface {
         }
     }
 
-    return { sdk, logIn, logOut };
+    return { sdk, logIn, logOut, ownerId };
 }

@@ -13,10 +13,12 @@ import {
 } from "@spotify/web-api-ts-sdk";
 import { useCallback, useState } from "react";
 import { ExtendedPlaylistPage, PlaylistTracks } from "../customInterfaces";
+import { useOwnerId } from "../hooks/useOwnerId";
 
 function App() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const sdk = useSdk();
+    const ownerId = useOwnerId();
 
     const [playlists, setPlaylists] = useState<ExtendedPlaylistPage | null>(
         null
@@ -87,13 +89,21 @@ function App() {
             );
 
             const results = await Promise.all(promises);
-            // How to fetch the next pages of tracks for each playlist simultaneously again?
 
             const playlistTracks: PlaylistTracks[] = results.map(
                 (playlistTrack, index) => {
+                    const playlist_id = fetchPlaylists.items[index].id;
+                    const name = fetchPlaylists.items[index].name;
+                    const is_collaborative =
+                        fetchPlaylists.items[index].collaborative;
+                    const is_owner =
+                        fetchPlaylists.items[index].owner.id === ownerId;
+
                     return {
-                        playlist_id: fetchPlaylists.items[index].id,
-                        name: fetchPlaylists.items[index].name,
+                        playlist_id,
+                        name,
+                        is_collaborative,
+                        is_owner,
                         tracks: {
                             ...playlistTrack,
                             allItems: playlistTrack?.items ?? [],

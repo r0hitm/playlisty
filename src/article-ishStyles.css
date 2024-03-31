@@ -13,6 +13,11 @@ article h1 {
     margin-bottom: 0.5em;
 }
 
+article h2 {
+    font-size: 1.2em;
+    margin-top: 0.5em;
+}
+
 article p {
     margin-bottom: 1em;
 }

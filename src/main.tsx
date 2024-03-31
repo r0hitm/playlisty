@@ -30,7 +30,7 @@ const router = createBrowserRouter(
             ],
         },
     ],
-    { basename: "/playlisty/" }
+    // { basename: "/playlisty/" } Now deploying to vercel from gh-pages
 );
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

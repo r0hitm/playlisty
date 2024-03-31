@@ -10,7 +10,7 @@ export interface ExtendedPlaylistPage extends Page<SimplifiedPlaylist> {
 }
 
 export interface ExtendedPlaylistedTracks extends Page<PlaylistedTrack<Track>> {
-    allItems: PlaylistedTrack<Track>[];
+    allItems: { track: Track }[];
 }
 
 // Custom Interface that contains all the playlist

@@ -6,7 +6,7 @@ export interface DropDownProps {
     playlists: ExtendedPlaylistPage | null;
     selectedPlaylist: string | null;
     fetchPlaylists: () => void;
-    handleSelect: (playlist: SimplifiedPlaylist) => void;
+    handleSelect: (playlist: SimplifiedPlaylist | { id: string }) => void;
     loading: boolean;
     clearTrackSelection: () => void;
 }
@@ -27,12 +27,12 @@ export default function DropDown({
 }: DropDownProps) {
     function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
         console.log("option event triggered:", event.target.value);
-        const newSelection = playlists?.items.find(
+        const newSelection = playlists?.allItems.find(
             playlist => playlist.id === event.target.value
         );
-        if (newSelection) {
+        if (newSelection ?? event.target.value === "liked") {
             console.log("new selection:", newSelection);
-            handleSelect(newSelection);
+            handleSelect(newSelection ?? { id: "liked" });
             clearTrackSelection();
         }
     }
@@ -47,6 +47,13 @@ export default function DropDown({
                     disabled={loading}
                     defaultValue={selectedPlaylist ?? undefined}
                 >
+                    <option
+                        className="select-playlist-item"
+                        key="liked"
+                        value="liked"
+                    >
+                        Liked Songs
+                    </option>
                     {playlists.items.map(playlist => (
                         <option
                             className="select-playlist-item"

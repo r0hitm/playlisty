@@ -11,7 +11,7 @@ import {
     SimplifiedPlaylist,
     Track,
 } from "@spotify/web-api-ts-sdk";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useRef } from "react";
 import { ExtendedPlaylistPage, PlaylistTracks } from "../customInterfaces";
 
 function App() {
@@ -21,6 +21,13 @@ function App() {
     const [playlists, setPlaylists] = useState<ExtendedPlaylistPage | null>(
         null
     );
+    // This is workaround for the Liked Songs playlist, because
+    // I do not want to refactor my custom interfaces for ExtendedPlaylistPage now
+    // Dropdown accounts for this as well, by extending the playlist items and
+    // using the id as a string
+    // WTF?? Spotify treat this a different way than other playlists
+    const likedPlaylistId = useRef("liked");
+
     const [playlistTracks, setPlaylistTracks] = useState<
         PlaylistTracks[] | null
     >(null);
@@ -116,6 +123,31 @@ function App() {
                 }
             );
 
+            const likedPlaylistTracks =
+                await sdk!.currentUser.tracks.savedTracks();
+            playlistTracks.push({
+                playlist_id: "liked",
+                name: "Liked Songs",
+                is_owner: true,
+                tracks: {
+                    allItems: likedPlaylistTracks.items.map(item => ({
+                        track: item.track,
+                    })),
+                    next: likedPlaylistTracks.next,
+
+                    // The following lines make the type checker happy
+                    // I do not use them in the app + this is a hack for now
+                    // as I do not want to refactor my custom interfaces yet!
+                    items: [],
+                    href: likedPlaylistTracks.href,
+                    limit: likedPlaylistTracks.limit,
+                    offset: likedPlaylistTracks.offset,
+                    total: likedPlaylistTracks.total,
+                    previous: likedPlaylistTracks.previous, // add this line
+                },
+            });
+            console.log("Liked songs", likedPlaylistTracks);
+
             let nextUrls = playlistTracks
                 .filter(playlistTrack => playlistTrack.tracks.next)
                 .map(playlistTrack => ({
@@ -169,7 +201,6 @@ function App() {
                         playlistTrack.tracks.next = nextTrack.tracks.next;
                     }
                 });
-
                 nextUrls = nextTracks
                     .filter(playlistTrack => playlistTrack.tracks.next)
                     .map(playlistTrack => ({
@@ -195,7 +226,19 @@ function App() {
         return <Navigate to="/" replace />;
     }
 
-    const handlePlaylistSelect = (playlist: SimplifiedPlaylist) => {
+    const handlePlaylistSelect = (
+        playlist: SimplifiedPlaylist | { id: string }
+    ) => {
+        if (playlist.id === selectedPlaylist) {
+            return;
+        }
+
+        if (playlist.id === "liked") {
+            console.log("Liked songs selected");
+            setSelectedPlaylist(likedPlaylistId.current);
+            return;
+        }
+
         setSelectedPlaylist(playlist.id);
     };
 

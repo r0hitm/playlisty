@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react";
 import { PlaylistTracks } from "../customInterfaces";
 import PlaylistItem from "./PlaylistItem";
+import useSdk from "../hooks/useSdk";
+import { Track } from "@spotify/web-api-ts-sdk";
 
 interface NotInTheseProps {
     playlistTracks: PlaylistTracks[] | null;
-    activeTrackId: string | null;
-    activeTrackUri: string | null;
-    updatePlaylistTracks: (newPlaylistTracks: PlaylistTracks[]) => void;
+    activeTrack: Track | null;
+    updatePlaylistTracks: (newPlaylistTracks: PlaylistTracks[] | null) => void;
 }
 
 export default function NotInThese({
     playlistTracks,
-    activeTrackId,
-    activeTrackUri,
+    activeTrack,
     updatePlaylistTracks,
 }: NotInTheseProps) {
-    // const sdk = useSdk();
+    const sdk = useSdk();
     const [notInThese, setNotInThese] = useState<PlaylistTracks[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        if (!playlistTracks || !activeTrackId) {
+        if (!playlistTracks || !activeTrack) {
             return;
         }
 
@@ -28,7 +28,7 @@ export default function NotInThese({
         playlistTracks.forEach(playlist => {
             if (
                 !playlist.tracks.allItems.some(
-                    track => track.track.id === activeTrackId
+                    track => track.track.id === activeTrack.id
                 )
             ) {
                 notInThese.push(playlist);
@@ -40,20 +40,63 @@ export default function NotInThese({
         return () => {
             setNotInThese([]);
         };
-    }, [activeTrackId]);
+    }, [activeTrack, playlistTracks]);
 
     async function handleAddTo(playlistId: string) {
-        setIsLoading(true);
-        console.log(
-            "TODO: Adding track to playlist...",
-            playlistId,
-            activeTrackUri
-        );
-        //sdk?.playlists.removeItemsFromPlaylist(playlistId, [activeTrackUri])
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        updatePlaylistTracks(playlistTracks!);
+        try {
+            setIsLoading(true);
+            console.log(
+                "TODO: Adding track to playlist...",
+                playlistId,
+                activeTrack!.uri
+            );
 
-        setIsLoading(false);
+            await sdk?.playlists.addItemsToPlaylist(playlistId, [
+                activeTrack!.uri,
+            ]);
+            // Now also update the playlistTracks state instead  of refetching
+            // LIMITATION: I am not keeping track of other metadata like date_added etc
+            // that spotify adds while adding a track to a playlist. I don't think I need it,
+            // So I'll just update the tracks array of the playlist that shows the user that
+            // the track has been added to the playlist.
+            const newPlaylistTracks = playlistTracks?.map(playlist => {
+                if (playlist.playlist_id === playlistId) {
+                    return {
+                        ...playlist,
+                        tracks: {
+                            ...playlist.tracks,
+                            allItems: [
+                                ...playlist.tracks.allItems,
+                                {
+                                    // Thi is all the metadata that spotify adds
+                                    // that I don't care about so in the local state
+                                    // I'm just adding garbage data
+                                    added_at: new Date().toISOString(),
+                                    added_by: {
+                                        id: "",
+                                        external_urls: { spotify: "" },
+                                        href: "",
+                                        type: "",
+                                        uri: "",
+                                    },
+                                    is_local: false,
+                                    primary_color: "",
+                                    track: activeTrack!,
+                                },
+                            ],
+                        },
+                    };
+                }
+
+                return playlist;
+            });
+
+            updatePlaylistTracks(newPlaylistTracks ?? null);
+        } catch (error) {
+            console.error("Error adding track to playlist:", error);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (

@@ -203,7 +203,10 @@ function App() {
         setSelectedTrack(track);
     };
 
-    const updatePlaylistsTracks = (newPlaylistTracks: PlaylistTracks[]) => {
+    const updatePlaylistsTracks = (
+        newPlaylistTracks: PlaylistTracks[] | null
+    ) => {
+        console.log("Updating playlist tracks", newPlaylistTracks);
         setPlaylistTracks(newPlaylistTracks);
     };
 
@@ -240,15 +243,13 @@ function App() {
             />
             <InThese
                 playlistTracks={playlistTracks}
-                activeTrackId={selectedTrack?.id ?? ""}
-                activeTrackUri={selectedTrack?.uri ?? ""}
+                activeTrack={selectedTrack}
                 activePlaylist={selectedPlaylist} // To prevent showing up the selected playlist
                 updatePlaylistTracks={updatePlaylistsTracks}
             />
             <NotInThese
                 playlistTracks={playlistTracks}
-                activeTrackId={selectedTrack?.id ?? ""}
-                activeTrackUri={selectedTrack?.uri ?? ""}
+                activeTrack={selectedTrack}
                 updatePlaylistTracks={updatePlaylistsTracks}
             />
         </div>

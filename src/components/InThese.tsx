@@ -3,27 +3,28 @@ import { useEffect, useState } from "react";
 import { PlaylistTracks } from "../customInterfaces";
 import "./InTheseNotInThese.css";
 import PlaylistItem from "./PlaylistItem";
+import useSdk from "../hooks/useSdk";
+import { Track } from "@spotify/web-api-ts-sdk";
 
 interface InTheseProps {
     playlistTracks: PlaylistTracks[] | null;
-    activeTrackId: string | null;
-    activeTrackUri: string | null;
+    activeTrack: Track | null;
     activePlaylist: string | null;
-    updatePlaylistTracks: (newPlaylistTracks: PlaylistTracks[]) => void;
+    updatePlaylistTracks: (newPlaylistTracks: PlaylistTracks[] | null) => void;
 }
 
 export default function InThese({
     playlistTracks,
-    activeTrackId,
-    activeTrackUri,
+    activeTrack,
     activePlaylist,
     updatePlaylistTracks,
 }: InTheseProps) {
+    const sdk = useSdk();
     const [inThese, setInThese] = useState<PlaylistTracks[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        if (!playlistTracks || !activeTrackId) {
+        if (!playlistTracks || !activeTrack) {
             return;
         }
 
@@ -31,7 +32,7 @@ export default function InThese({
         playlistTracks.forEach(playlist => {
             if (
                 playlist.tracks.allItems.some(
-                    track => track.track.id === activeTrackId
+                    track => track.track.id === activeTrack.id
                 ) &&
                 playlist.playlist_id !== activePlaylist
             ) {
@@ -44,21 +45,41 @@ export default function InThese({
         return () => {
             setInThese([]);
         };
-    }, [activeTrackId]);
+    }, [activeTrack, playlistTracks]);
 
     async function handleRemoveFrom(playlistId: string) {
-        setIsLoading(true);
-        console.log(
-            "TODO: Removing track from playlist...",
-            playlistId,
-            activeTrackUri
-        );
+        try {
+            setIsLoading(true);
+            console.log(
+                "TODO: Removing track from playlist...",
+                playlistId,
+                activeTrack!.uri
+            );
 
-        //sdk?.playlists.removeItemsFromPlaylist(playlistId, [activeTrackUri])
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        updatePlaylistTracks(playlistTracks!);
+            await sdk?.playlists.removeItemsFromPlaylist(playlistId, {
+                tracks: [{ uri: activeTrack!.uri }],
+            });
 
-        setIsLoading(false);
+            const newPlaylistTracks = playlistTracks?.map(playlist => {
+                if (playlist.playlist_id === playlistId) {
+                    return {
+                        ...playlist,
+                        tracks: {
+                            ...playlist.tracks,
+                            allItems: playlist.tracks.allItems.filter(
+                                track => track.track.id !== activeTrack!.id
+                            ),
+                        },
+                    };
+                }
+                return playlist;
+            });
+            updatePlaylistTracks(newPlaylistTracks ?? null);
+        } catch (error) {
+            console.error("Error adding track to playlist:", error);
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (

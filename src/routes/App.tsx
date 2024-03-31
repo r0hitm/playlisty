@@ -50,8 +50,15 @@ function App() {
             if (selectedTrackIndex === -1) {
                 return;
             }
+            const parentElement = document.querySelector(".tracks-component")!;
+            const scrollAmount = 5 * 16;
             if (event.key === "ArrowUp") {
                 if (selectedTrackIndex > 0) {
+                    event.preventDefault();
+                    parentElement.scrollTo({
+                        top: parentElement.scrollTop - scrollAmount,
+                        behavior: "smooth",
+                    });
                     handleTrackSelect(
                         activePlaylist.tracks.allItems[selectedTrackIndex - 1]
                             .track
@@ -62,6 +69,11 @@ function App() {
                     selectedTrackIndex <
                     activePlaylist.tracks.allItems.length - 1
                 ) {
+                    event.preventDefault();
+                    parentElement.scrollTo({
+                        top: parentElement.scrollTop + scrollAmount,
+                        behavior: "smooth",
+                    });
                     handleTrackSelect(
                         activePlaylist.tracks.allItems[selectedTrackIndex + 1]
                             .track

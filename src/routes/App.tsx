@@ -81,10 +81,10 @@ function App() {
                 }
                 const nextPlaylistsPage =
                     (await nextPlaylistsPageResp.json()) as Page<SimplifiedPlaylist>;
-                console.log(
-                    "Fetched next page of playlists",
-                    nextPlaylistsPage
-                );
+                // console.log(
+                //     "Fetched next page of playlists",
+                //     nextPlaylistsPage
+                // );
                 allPlaylists = {
                     ...allPlaylists,
                     allItems: [
@@ -96,7 +96,7 @@ function App() {
             }
             setPlaylists(allPlaylists);
             if (!playlists) {
-                console.log("Initial fetch for playlists complete.");
+                // console.log("Initial fetch for playlists complete.");
                 handlePlaylistSelect(fetchPlaylists.items[0]);
             }
             // console.log("Fetched current user's playlists", fetchPlaylists);
@@ -117,10 +117,10 @@ function App() {
                     // fetchPlaylists.items[index].collaborative;
                     const is_owner =
                         fetchPlaylists.items[index].owner.id === ownerId;
-                    console.log(`Owner of ${name} is ${is_owner}`, {
-                        fetchedOwnerId: fetchPlaylists.items[index].owner.id,
-                        ownerId,
-                    });
+                    // console.log(`Owner of ${name} is ${is_owner}`, {
+                    //     fetchedOwnerId: fetchPlaylists.items[index].owner.id,
+                    //     ownerId,
+                    // });
 
                     return {
                         playlist_id,
@@ -158,7 +158,7 @@ function App() {
                     previous: likedPlaylistTracks.previous,
                 },
             });
-            console.log("Liked songs", likedPlaylistTracks);
+            // console.log("Liked songs", likedPlaylistTracks);
 
             let nextUrls = playlistTracks
                 .filter(playlistTrack => playlistTrack.tracks.next)
@@ -220,7 +220,7 @@ function App() {
                         next: playlistTrack.tracks.next!,
                     }));
 
-                console.log("Next tracks wanted", nextUrls);
+                // console.log("Next tracks wanted", nextUrls);
                 // alert(
                 //     `Again: Out of ${playlistTracks.length} playlists, ${nextUrls.length} have more tracks to fetch.`
                 // );
@@ -246,7 +246,7 @@ function App() {
         }
 
         if (playlist.id === "liked") {
-            console.log("Liked songs selected");
+            // console.log("Liked songs selected");
             setSelectedPlaylist(likedPlaylistId.current);
             return;
         }
@@ -261,7 +261,7 @@ function App() {
     const updatePlaylistsTracks = (
         newPlaylistTracks: PlaylistTracks[] | null
     ) => {
-        console.log("Updating playlist tracks", newPlaylistTracks);
+        // console.log("Updating playlist tracks", newPlaylistTracks);
         setPlaylistTracks(newPlaylistTracks);
     };
 
@@ -271,9 +271,9 @@ function App() {
                 playlists={playlists}
                 fetchPlaylists={() => {
                     fetchPlaylistsAndTracks()
-                        .then(() => {
-                            console.log("Everything should be fetched now.");
-                        })
+                        // .then(() => {
+                        // console.log("Everything should be fetched now.");
+                        // })
                         .catch((e: unknown) => {
                             const error = e as Error;
                             console.error("Everything is NOT fetched", error);

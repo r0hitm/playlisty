@@ -26,12 +26,12 @@ export default function DropDown({
     loading,
 }: DropDownProps) {
     function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
-        console.log("option event triggered:", event.target.value);
+        // console.log("option event triggered:", event.target.value);
         const newSelection = playlists?.allItems.find(
             playlist => playlist.id === event.target.value
         );
         if (newSelection ?? event.target.value === "liked") {
-            console.log("new selection:", newSelection);
+            // console.log("new selection:", newSelection ?? "liked");
             handleSelect(newSelection ?? { id: "liked" });
             clearTrackSelection();
         }

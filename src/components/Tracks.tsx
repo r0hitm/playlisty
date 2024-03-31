@@ -1,25 +1,16 @@
-import {
-    // PlaylistedTrack,
-    // SimplifiedPlaylist,
-    Track,
-    // Page,
-} from "@spotify/web-api-ts-sdk";
+import { Track } from "@spotify/web-api-ts-sdk";
 import "./Tracks.css";
-// import { useEffect, useState } from "react";
-// import useSdk from "../hooks/useSdk";
 import { PlaylistTracks } from "../customInterfaces";
 import Loading from "./Loading";
 
 export default function Tracks({
     activePlaylist,
     selectedTrack,
-    // tracks,
     loading,
     handleTrackSelect,
 }: {
     activePlaylist: PlaylistTracks | null;
     selectedTrack: string | null;
-    // tracks: PlaylistTracks[] | null;
     loading: boolean;
     handleTrackSelect: (track: Track | null) => void;
 }) {
@@ -51,20 +42,6 @@ export default function Tracks({
                 ))}
             </ul>
             {loading && <Loading />}
-            {/* {allTracksLoaded ? (
-                <p>Loaded everything</p>
-            ) : (
-                <button
-                    type="button"
-                    onClick={() => {
-                        console.log("Loding more tracks...");
-                        void loadMoreTracks();
-                        console.log("Should be loaded");
-                    }}
-                >
-                    Load more
-                </button>
-            )} */}
         </div>
     );
 }

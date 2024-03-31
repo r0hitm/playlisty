@@ -37,6 +37,14 @@ export default function Tracks({
     return (
         <div className="tracks-component">
             <h2>Songs in this playlist</h2>
+            <p style={
+                {
+                    fontSize: "small",
+                    fontStyle: "italic",
+                }
+            }>
+                Tip: Click on a song & press up/down arrow keys to navigate
+            </p>
             <ul>
                 {activePlaylist?.tracks.allItems.map((track, index) => (
                     <li

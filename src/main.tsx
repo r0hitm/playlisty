@@ -29,8 +29,8 @@ const router = createBrowserRouter(
                 },
             ],
         },
-    ]
-    // basename: "/<REPO>" // if not being deployed to root of the website
+    ],
+    { basename: "/playlisty/" }
 );
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

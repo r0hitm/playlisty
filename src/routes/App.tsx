@@ -11,7 +11,7 @@ import {
     SimplifiedPlaylist,
     Track,
 } from "@spotify/web-api-ts-sdk";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ExtendedPlaylistPage, PlaylistTracks } from "../customInterfaces";
 import useAppProps from "../hooks/useAppProps";
 
@@ -30,24 +30,51 @@ function App() {
         setSelectedTrack,
     } = useAppProps();
 
-    // const [playlists, setPlaylists] = useState<ExtendedPlaylistPage | null>(
-    //     null
-    // );
-    // // This is workaround for the Liked Songs playlist, because
-    // // I do not want to refactor my custom interfaces for ExtendedPlaylistPage now
-    // // Dropdown accounts for this as well, by extending the playlist items and
-    // // using the id as a string
-    // // WTF?? Spotify treat this a different way than other playlists
-    // const likedPlaylistId = useRef("liked");
+    // A useeffect to set cursor key up/down to change the selected track
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (!playlistTracks || !selectedTrack) {
+                return;
+            }
+            const activePlaylist = playlistTracks.find(
+                playlist => playlist.playlist_id === selectedPlaylist
+            );
+            if (!activePlaylist) {
+                return;
+            }
+            const selectedTrackIndex = activePlaylist.tracks.allItems.findIndex(
+                playlistTrack => playlistTrack.track.id === selectedTrack.id
+            );
+            // In current implementation, if the selected track is not found in the playlist, we do nothing
+            // User MUST select a track from the playlist first
+            if (selectedTrackIndex === -1) {
+                return;
+            }
+            if (event.key === "ArrowUp") {
+                if (selectedTrackIndex > 0) {
+                    handleTrackSelect(
+                        activePlaylist.tracks.allItems[selectedTrackIndex - 1]
+                            .track
+                    );
+                }
+            } else if (event.key === "ArrowDown") {
+                if (
+                    selectedTrackIndex <
+                    activePlaylist.tracks.allItems.length - 1
+                ) {
+                    handleTrackSelect(
+                        activePlaylist.tracks.allItems[selectedTrackIndex + 1]
+                            .track
+                    );
+                }
+            }
+        };
+        document.addEventListener("keydown", handleKeyDown);
 
-    // const [playlistTracks, setPlaylistTracks] = useState<
-    //     PlaylistTracks[] | null
-    // >(null);
-
-    // const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(
-    //     null
-    // );
-    // const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [playlistTracks, selectedTrack, selectedPlaylist]);
 
     const fetchPlaylistsAndTracks = useCallback(async () => {
         setIsLoading(true);

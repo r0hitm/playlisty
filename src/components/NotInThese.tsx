@@ -46,14 +46,21 @@ export default function NotInThese({
         try {
             setIsLoading(true);
             console.log(
-                "TODO: Adding track to playlist...",
+                "Adding track to playlist...",
                 playlistId,
                 activeTrack!.uri
             );
 
-            await sdk?.playlists.addItemsToPlaylist(playlistId, [
-                activeTrack!.uri,
-            ]);
+            if (playlistId === "liked") {
+                await sdk?.currentUser.tracks.saveTracks([activeTrack!.id]);
+            } else {
+                await sdk?.playlists.addItemsToPlaylist(playlistId, [
+                    activeTrack!.uri,
+                ]);
+            }
+
+            // Make the type checkers happy :) (read the comment below)
+
             // Now also update the playlistTracks state instead  of refetching
             // LIMITATION: I am not keeping track of other metadata like date_added etc
             // that spotify adds while adding a track to a playlist. I don't think I need it,
@@ -68,7 +75,7 @@ export default function NotInThese({
                             allItems: [
                                 ...playlist.tracks.allItems,
                                 {
-                                    // Thi is all the metadata that spotify adds
+                                    // This is all the metadata that spotify adds
                                     // that I don't care about so in the local state
                                     // I'm just adding garbage data
                                     added_at: new Date().toISOString(),

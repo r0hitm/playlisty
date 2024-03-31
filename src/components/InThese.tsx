@@ -51,14 +51,20 @@ export default function InThese({
         try {
             setIsLoading(true);
             console.log(
-                "TODO: Removing track from playlist...",
+                "Removing track from playlist...",
                 playlistId,
                 activeTrack!.uri
             );
 
-            await sdk?.playlists.removeItemsFromPlaylist(playlistId, {
-                tracks: [{ uri: activeTrack!.uri }],
-            });
+            if (playlistId === "liked") {
+                await sdk?.currentUser.tracks.removeSavedTracks([
+                    activeTrack!.id,
+                ]);
+            } else {
+                await sdk?.playlists.removeItemsFromPlaylist(playlistId, {
+                    tracks: [{ uri: activeTrack!.uri }],
+                });
+            }
 
             const newPlaylistTracks = playlistTracks?.map(playlist => {
                 if (playlist.playlist_id === playlistId) {

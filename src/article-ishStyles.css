@@ -1,0 +1,22 @@
+article {
+    margin-left: 20%;
+    margin-right: 10%;
+    padding: 2em;
+}
+
+article * {
+    line-height: 1.6;
+}
+
+article h1 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+article p {
+    margin-bottom: 1em;
+}
+
+article ul {
+    margin-left: 1.5em;
+}

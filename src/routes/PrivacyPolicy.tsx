@@ -25,29 +25,29 @@ export default function PrivacyPolicy() {
             <p>
                 The app requests the following permissions from users to execute
                 specific actions:
-                <ul>
-                    <li>
-                        <strong>User Details</strong>: To retrieve user IDs for
-                        playlist filtering purposes.
-                    </li>
-                    <li>
-                        <strong>User Library Read</strong>: To access the
-                        user&apos;s &quot;Liked Songs.&quot;
-                    </li>
-                    <li>
-                        <strong>User Library Modify</strong>: To add or remove
-                        tracks from playlists.
-                    </li>
-                    <li>
-                        <strong>Playlist Read</strong>: To retrieve the list of
-                        playlists the user follows/created.
-                    </li>
-                    <li>
-                        <strong>Playlist Modify</strong>: To add or remove
-                        tracks from these playlists.
-                    </li>
-                </ul>
             </p>
+            <ul>
+                <li>
+                    <strong>User Details</strong>: To retrieve user IDs for
+                    playlist filtering purposes.
+                </li>
+                <li>
+                    <strong>User Library Read</strong>: To access the
+                    user&apos;s &quot;Liked Songs.&quot;
+                </li>
+                <li>
+                    <strong>User Library Modify</strong>: To add or remove
+                    tracks from playlists.
+                </li>
+                <li>
+                    <strong>Playlist Read</strong>: To retrieve the list of
+                    playlists the user follows/created.
+                </li>
+                <li>
+                    <strong>Playlist Modify</strong>: To add or remove tracks
+                    from these playlists.
+                </li>
+            </ul>
             <p>
                 Should you have any concerns or queries, please contact me at:{" "}
                 <code>rohitm09 [at] proton [dot] me</code>

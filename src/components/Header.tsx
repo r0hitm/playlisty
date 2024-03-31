@@ -12,7 +12,7 @@ export function Header({
 }) {
     return (
         <header>
-            <img src="/Logo.webp" alt="Logo" className="logo" />
+            <img src="./Logo.webp" alt="Logo" className="logo" />
             <nav>
                 <ul>
                     <li>

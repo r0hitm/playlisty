@@ -75,6 +75,21 @@ export default function Root() {
                         This app will help you with that! 📝
                     </p>
                     <p>Get started by logging in with your Spotify! 🎵</p>
+                    <p>
+                        🔴 Though, techincally complete, the App is in
+                        <i>&quot;development mode&quot;</i>, and I have
+                        requested the Spotify team for{" "}
+                        <i>&quot;Extended Quota Mode&qouot;</i> which can take
+                        upto 6 weeks. As such, anyone whose email account I do
+                        not add manually, will not be able to use the app.
+                        Let&apos;s wait patiently and hope for the best. 🤞
+                    </p>
+                    <p>
+                        ⚠ If you want to try the app nonetheless, contact me and
+                        I will add your email to the list. <strong>Note</strong>
+                        : There is a limit of 25 users, so I might not be able
+                        to add everyone.
+                    </p>
                 </article>
             ) : null}
         </>

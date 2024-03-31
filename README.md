@@ -2,6 +2,12 @@
 
 Track your songs across playlists and organize with bird’s eye view.
 
+⚠ The App is in `development mode`, and I have requested the Spotify team for `Extended Quota Mode` which can take
+upto 6 weeks. As such, anyone whose email account I do not add manually, will not be able to use the app.
+Let's wait patiently and hope for the best. 🤞
+
+⚠ If you want to try the app nonetheless, contact me and I will add your email to the list. **Note**: There is a limit of 25 users, so I might not be able to add everyone.
+
 ## Disclaimer
 
 This is a personal project and I am not affiliated with Spotify in any way. I saw a need for this tool and built it for my personal use. I am sharing it with the community in the hope that it will be useful to others as well.

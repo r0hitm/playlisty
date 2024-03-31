@@ -41,6 +41,7 @@ a:hover {
 body {
     min-width: 1024px;
     min-height: 100vh;
+    position: relative;
 }
 
 h1 {

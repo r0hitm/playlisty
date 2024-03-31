@@ -1,0 +1,33 @@
+.footer {
+    position: absolute;
+    left: 0;
+    padding: 1rem;
+    bottom: 4rem;
+    max-width: 20%;
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.footer > * {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.footer a {
+    text-decoration-line: underline;
+    text-decoration-style: wavy;
+    transition: text-decoration-color 0.25s;
+}
+
+.footer a:hover {
+    text-decoration-line: none;
+}
+
+.footer .socials {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.footer .socials > * {
+    margin-right: 0.5rem;
+}

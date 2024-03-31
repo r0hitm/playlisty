@@ -11,31 +11,43 @@ import {
     SimplifiedPlaylist,
     Track,
 } from "@spotify/web-api-ts-sdk";
-import { useCallback, useState, useRef } from "react";
+import { useCallback, useState } from "react";
 import { ExtendedPlaylistPage, PlaylistTracks } from "../customInterfaces";
+import useAppProps from "../hooks/useAppProps";
 
 function App() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const sdk = useSdk();
+    const {
+        playlists,
+        setPlaylists,
+        likedPlaylistId,
+        playlistTracks,
+        setPlaylistTracks,
+        selectedPlaylist,
+        setSelectedPlaylist,
+        selectedTrack,
+        setSelectedTrack,
+    } = useAppProps();
 
-    const [playlists, setPlaylists] = useState<ExtendedPlaylistPage | null>(
-        null
-    );
-    // This is workaround for the Liked Songs playlist, because
-    // I do not want to refactor my custom interfaces for ExtendedPlaylistPage now
-    // Dropdown accounts for this as well, by extending the playlist items and
-    // using the id as a string
-    // WTF?? Spotify treat this a different way than other playlists
-    const likedPlaylistId = useRef("liked");
+    // const [playlists, setPlaylists] = useState<ExtendedPlaylistPage | null>(
+    //     null
+    // );
+    // // This is workaround for the Liked Songs playlist, because
+    // // I do not want to refactor my custom interfaces for ExtendedPlaylistPage now
+    // // Dropdown accounts for this as well, by extending the playlist items and
+    // // using the id as a string
+    // // WTF?? Spotify treat this a different way than other playlists
+    // const likedPlaylistId = useRef("liked");
 
-    const [playlistTracks, setPlaylistTracks] = useState<
-        PlaylistTracks[] | null
-    >(null);
+    // const [playlistTracks, setPlaylistTracks] = useState<
+    //     PlaylistTracks[] | null
+    // >(null);
 
-    const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(
-        null
-    );
-    const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
+    // const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(
+    //     null
+    // );
+    // const [selectedTrack, setSelectedTrack] = useState<Track | null>(null);
 
     const fetchPlaylistsAndTracks = useCallback(async () => {
         setIsLoading(true);

@@ -9,11 +9,42 @@
   <meta name="author" content="Rohit Mehta" />
   <meta name="keywords" content="Spotify, Playlists" />
   <title>Playlisty: Bird Eye Organization of Spotify Playlists</title>
+  <style>
+    .offline-message {
+      text-align: center;
+      opacity: 1;
+      display: none;
+      color: red;
+      background-color: var(--primary-color-dark);
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding: 1rem;
+    }
+  </style>
 </head>
 
 <body>
+  <p class="offline-message">
+    You are offline. Please check your internet connection.
+  </p>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
+  <script>
+    const root = document.getElementById('root');
+    const offlineMessage = document.querySelector('.offline-message');
+    // if we go offline, then fade out the app and disable the app
+    window.addEventListener('offline', () => {
+      root.style.opacity = 0.5;
+      root.style.pointerEvents = 'none';
+      offlineMessage.style.display = 'block';
+    });
+    window.addEventListener('online', () => {
+      root.style.opacity = 1;
+      root.style.pointerEvents = 'auto';
+      offlineMessage.style.display = 'none';
+      alert('You are back online. It would not be a bad idea to refresh just in case');
+    });
+  </script>
 </body>
 
 </html>

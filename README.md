@@ -18,17 +18,17 @@ With this project, I want to solve this problem and make it easy to see where al
 - [x] **View the playlists where a track is present or not present at a glance**
 - [x] Move tracks between playlists
 - [x] Filter tracks by playlist
+- [x] Cursor up/down to navigate between songs
 
 ## Planned Features (Probably)
 
-Following are the features I am planning to add in the future, but not prioritizing at the moment:
+Not a priority at the moment:
 
-- [ ] Cursor up/down to navigate through tracks
-- [ ] Creating new playlist
-- [ ] Editing playlist details
-- [ ] Deleting playlist
-- [ ] Adding new tracks to playlist (via search)
-- [ ] Mobile Optimized UI
+- Creating new playlist
+- Editing playlist details
+- Deleting playlist
+- Adding new tracks to playlist (via search)
+- Mobile Optimized UI
 
 ## License
 

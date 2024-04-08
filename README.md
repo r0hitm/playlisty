@@ -8,6 +8,8 @@ Let's wait patiently and hope for the best. 🤞
 
 ⚠ If you want to try the app nonetheless, contact me and I will add your email to the list. **Note**: There is a limit of 25 users, so I might not be able to add everyone.
 
+👉 [View Demo Video on YouTube](https://youtu.be/9ssFiGuGMhg)
+
 ## Disclaimer
 
 This is a personal project and I am not affiliated with Spotify in any way. I saw a need for this tool and built it for my personal use. I am sharing it with the community in the hope that it will be useful to others as well.

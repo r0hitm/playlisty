@@ -88,10 +88,6 @@ function App() {
         };
     }, [playlistTracks, selectedTrack, selectedPlaylist]);
 
-    useEffect(() => {
-        console.log("from the effect. currrent state:", playlists);
-    }, [playlists]);
-
     const fetchPlaylistsAndTracks = useCallback(async () => {
         setIsLoading(true);
         try {
@@ -137,7 +133,7 @@ function App() {
                 };
                 next = nextPlaylistsPage.next;
             }
-            console.log(allPlaylists);
+            // console.log(allPlaylists);
             setPlaylists(allPlaylists);
             if (!playlists) {
                 // console.log("Initial fetch for playlists complete.");
@@ -145,7 +141,7 @@ function App() {
             }
             // console.log("Fetched current user's playlists", fetchPlaylists);
 
-            console.log("allPlaylists.allItems: ", allPlaylists.allItems);
+            // console.log("allPlaylists.allItems: ", allPlaylists.allItems);
             // const promises = fetchPlaylists.items.map(playlist =>
             const promises = allPlaylists.allItems.map(playlist =>
                 sdk!.playlists.getPlaylistItems(playlist.id)

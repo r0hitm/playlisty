@@ -88,6 +88,10 @@ function App() {
         };
     }, [playlistTracks, selectedTrack, selectedPlaylist]);
 
+    useEffect(() => {
+        console.log("from the effect. currrent state:", playlists);
+    }, [playlists]);
+
     const fetchPlaylistsAndTracks = useCallback(async () => {
         setIsLoading(true);
         try {
@@ -133,6 +137,7 @@ function App() {
                 };
                 next = nextPlaylistsPage.next;
             }
+            console.log(allPlaylists);
             setPlaylists(allPlaylists);
             if (!playlists) {
                 // console.log("Initial fetch for playlists complete.");
@@ -140,7 +145,9 @@ function App() {
             }
             // console.log("Fetched current user's playlists", fetchPlaylists);
 
-            const promises = fetchPlaylists.items.map(playlist =>
+            console.log("allPlaylists.allItems: ", allPlaylists.allItems);
+            // const promises = fetchPlaylists.items.map(playlist =>
+            const promises = allPlaylists.allItems.map(playlist =>
                 sdk!.playlists.getPlaylistItems(playlist.id)
             );
 
@@ -150,12 +157,12 @@ function App() {
 
             const playlistTracks: PlaylistTracks[] = results.map(
                 (playlistTrack, index) => {
-                    const playlist_id = fetchPlaylists.items[index].id;
-                    const name = fetchPlaylists.items[index].name;
+                    const playlist_id = allPlaylists.allItems[index].id;
+                    const name = allPlaylists.allItems[index].name;
                     // const is_collaborative =
                     // fetchPlaylists.items[index].collaborative;
                     const is_owner =
-                        fetchPlaylists.items[index].owner.id === ownerId;
+                        allPlaylists.allItems[index].owner.id === ownerId;
                     // console.log(`Owner of ${name} is ${is_owner}`, {
                     //     fetchedOwnerId: fetchPlaylists.items[index].owner.id,
                     //     ownerId,

@@ -1,6 +1,7 @@
 import "./DropDown.css";
 import { ExtendedPlaylistPage } from "../customInterfaces";
 import { SimplifiedPlaylist } from "@spotify/web-api-ts-sdk";
+import { useEffect } from "react";
 
 export interface DropDownProps {
     playlists: ExtendedPlaylistPage | null;
@@ -25,6 +26,10 @@ export default function DropDown({
     clearTrackSelection,
     loading,
 }: DropDownProps) {
+    useEffect(() => {
+        console.log("DropDown.ts: playlists: ", playlists);
+    }, [playlists]);
+
     function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
         // console.log("option event triggered:", event.target.value);
         const newSelection = playlists?.allItems.find(
@@ -54,13 +59,13 @@ export default function DropDown({
                     >
                         Liked Songs
                     </option>
-                    {playlists.items.map(playlist => (
+                    {playlists.allItems.map((playlist, i) => (
                         <option
                             className="select-playlist-item"
                             key={playlist.id}
                             value={playlist.id}
                         >
-                            {playlist.name}
+                            {i + 1} {playlist.name}
                         </option>
                     ))}
                 </select>
